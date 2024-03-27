@@ -2,20 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformFactory : MonoBehaviour
+[CreateAssetMenu]
+public class PlatformFactory : GameObjectFactory
 {
-    [SerializeField]
-    Platform platformPrefab = default;
-    public void createPlatform(int size, Vector2Int pos) { 
-        Platform[] platforms = new Platform[size];
+	// Start is called before the first frame update
+	[SerializeField]
+	Platform prefab = default;
 
-        for (int i = 0; i < platforms.Length; i++) {
-            Platform platform = platforms[i] = Instantiate(platformPrefab);
-            platform.transform.SetParent(transform, false);
-            platform.transform.localPosition = new Vector3(
-                pos.x * 0.5f + i, 0.5f, pos.y * 0.5f
-            );
-        }
-    }
-    
+	public Platform Get()
+	{
+		Platform instance = CreateGameObjectInstance(prefab);
+		instance.OriginFactory = this;
+		return instance;
+	}
+
+	public void Reclaim(Platform platform)
+	{
+		Debug.Assert(platform.OriginFactory == this, "Wrong factory reclaimed!");
+		Destroy(platform.gameObject);
+	}
 }
