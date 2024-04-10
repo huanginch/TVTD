@@ -19,13 +19,15 @@ public class Game : MonoBehaviour
 	[SerializeField]
 	EnemyFactory enemyFactory = default;
 
+	EnemyCollection enemies = new EnemyCollection();
+
 	[SerializeField, Range(0.1f, 10f)]
 	float spawnSpeed = 1f;
 
 	float spawnProgress;
 	void Awake()
 	{
-		board.Initialize(boardSize);
+		board.Initialize(boardSize, tileContentFactory);
 		mainCamera.transform.position = new Vector3(0.2f, 12.25f, -2.9f);
 		mainCamera.transform.rotation = Quaternion.Euler(new Vector3(73.229f, 0, 0));
 	}
@@ -41,21 +43,23 @@ public class Game : MonoBehaviour
 			boardSize.y = 2;
 		}
 	}
-	//void Update()
-	//{
+    void Update()
+    {
 
-	//	spawnProgress += spawnSpeed * Time.deltaTime;
-	//	while (spawnProgress >= 1f)
-	//	{
-	//		spawnProgress -= 1f;
-	//		SpawnEnemy();
-	//	}
-	//}
-	//void SpawnEnemy()
-	//{
-	//	GameTile spawnPoint =
-	//		board.GetSpawnPoint(Random.Range(0, board.SpawnPointCount));
-	//	Enemy enemy = enemyFactory.Get();
-	//	enemy.SpawnOn(spawnPoint);
-	//}
+        spawnProgress += spawnSpeed * Time.deltaTime;
+        while (spawnProgress >= 1f)
+        {
+            spawnProgress -= 1f;
+			SpawnEnemy();
+			enemies.GameUpdate();
+        }
+    }
+    void SpawnEnemy()
+    {
+        GameTile spawnPoint =
+            board.GetSpawnPoint(Random.Range(0, board.SpawnPointCount));
+        Enemy enemy = enemyFactory.Get();
+        enemy.SpawnOn(spawnPoint);
+		enemies.Add(enemy);
+	}
 }
