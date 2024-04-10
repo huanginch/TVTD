@@ -17,9 +17,9 @@ public class Wall : MonoBehaviour
 		}
 	}
 
-	public void SpawnOn(GameTile tile)
+	public void SpawnOn(Vector2 pos)
 	{
-		Vector3 newPos = new Vector3(tile.transform.localPosition.x, 0.5f, tile.transform.localPosition.z);
+		Vector3 newPos = new Vector3(pos.x, 0.5f, pos.y);
 		transform.localPosition = newPos;
 	}
 }
